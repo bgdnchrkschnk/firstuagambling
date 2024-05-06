@@ -1,0 +1,2 @@
+class EmailNotParsedError(Exception):
+    pass
