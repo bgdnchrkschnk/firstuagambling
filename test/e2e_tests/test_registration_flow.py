@@ -17,7 +17,6 @@ class TestRegistrationFlow:
         self.__class__.CURRENT_EMAIL = s_page.get_attribute(selector="input#eposta_adres", name="data-clipboard-text")
         if not self.__class__.CURRENT_EMAIL:
             raise EmailNotParsedError
-
         self.__class__.CURRENT_PW = faker.password(length=8, digits=True, lower_case=True, upper_case=True, special_chars=True)
 
         s_page.goto(url="https://first.ua/", wait_until="domcontentloaded")

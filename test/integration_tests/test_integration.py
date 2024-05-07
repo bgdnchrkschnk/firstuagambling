@@ -1,5 +1,4 @@
 import pytest
-from requests import Response
 
 from test.integration_tests.steps import APIClientSteps
 
@@ -36,12 +35,6 @@ class TestsIntegration:
         response = client.get_hotevents_list()
         assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
         assert "events" in response.json()
-
-    @pytest.mark.skip(reason="Needs to investigate with devs")
-    def test_transactions(self, client: APIClientSteps):
-        response = client.get_loyalty_levels()
-        assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
-        assert "levels" in response.json()
 
     def test_user_promotions_profile_all(self, client: APIClientSteps):
         response = client.get_user_promotions_profile_all()
