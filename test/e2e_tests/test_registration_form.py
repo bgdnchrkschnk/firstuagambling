@@ -93,6 +93,3 @@ class TestRegistrationForm:
         error = s_page.get_by_text("ЦЕЙ ПАРОЛЬ НЕ ПІДХОДИТЬ АБО ВІН МІСТИТЬ ПОМИЛКУ")
         error.wait_for()
         expect(error).to_be_visible()
-
-
-
