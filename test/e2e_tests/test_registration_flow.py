@@ -18,7 +18,6 @@ class TestRegistrationFlow:
         if not self.__class__.CURRENT_EMAIL:
             raise EmailNotParsedError
         self.__class__.CURRENT_PW = faker.password(length=8, digits=True, lower_case=True, upper_case=True, special_chars=True)
-
         s_page.goto(url="https://first.ua/", wait_until="domcontentloaded")
         register_button = s_page.locator("a[href='/ua/auth/signup']")
         register_button.click()
@@ -52,7 +51,6 @@ class TestRegistrationFlow:
     def test_sign_in(self, s_page: Page):
         sign_in_btn = s_page.wait_for_selector("a[href='/ua/auth/login']")
         sign_in_btn.click()
-
         time.sleep(3)
         s_page.get_by_text(text="Е-пошта").click()
         email_field = s_page.locator("input[type=email]")
