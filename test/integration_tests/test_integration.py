@@ -1,3 +1,4 @@
+import faker as faker
 import pytest
 
 from test.integration_tests.steps import APIClientSteps

@@ -1,12 +1,11 @@
 import time
 
+import faker as faker
 from playwright.sync_api import Page, expect
-
-from faker import Faker
-
-faker = Faker()
 from exceptions.exceptions import EmailNotParsedError
-from allure import title, description, suite, severity, severity_level
+from allure import title, description, suite, severity, severity_level, attach, attachment_type
+from faker import Faker
+faker = Faker()
 
 
 class TestRegistrationFlow:
@@ -41,9 +40,9 @@ class TestRegistrationFlow:
         decline_payment = s_page.locator("a use")
         decline_payment.wait_for(timeout=10000)
         decline_payment.click()
-        breakpoint()
         time.sleep(3)
         avatar_section = s_page.wait_for_selector("div.wheel")
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         assert avatar_section.is_visible(), "User transferring to private cabinet has failed"
 
     @title("User sign out")
@@ -56,6 +55,7 @@ class TestRegistrationFlow:
         sign_out_btn = s_page.wait_for_selector(selector="img[src='/assets/logout-50f91c22.png']")
         sign_out_btn.click()
         sign_in_btn = s_page.wait_for_selector("a[href='/ua/auth/login']")
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         assert sign_in_btn.is_visible(), "Signing out is failed"
 
     @title("User sign in")
@@ -74,6 +74,7 @@ class TestRegistrationFlow:
         log_in_btn = s_page.locator("button[data-v-5e7ea9e5]")
         log_in_btn.click()
         avatar_section = s_page.wait_for_selector("div.wheel")
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         assert avatar_section.is_visible(), f"Signing in system has failed"
 
     @title("Email confirmation")
@@ -89,9 +90,11 @@ class TestRegistrationFlow:
         expect(s_page.get_by_text("Будь ласка, перевірте вашу пошту та пройдіть верифікацію")).to_be_visible()
         s_page.goto(url="https://tempail.com/ua/", wait_until="domcontentloaded")
         email_to_open = s_page.wait_for_selector(selector="li.mail>a", timeout=30000)
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         assert email_to_open.is_visible(), "Confirmation email has not received"
         email_to_open.click()
         time.sleep(2)
         confirm_email_btn = s_page.frame_locator("#iframe").locator("a.es-button.es-button-1698392951487")
         confirm_email_btn.click()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         assert "first.ua" in s_page.url, f"Email confirmation has failed"

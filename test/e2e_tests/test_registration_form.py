@@ -3,7 +3,7 @@ import time
 import pytest
 from playwright.sync_api import Page, expect
 from faker import Faker
-from allure import title, description, suite, severity, severity_level
+from allure import title, description, suite, severity, severity_level, attach, attachment_type
 
 
 faker = Faker()
@@ -26,6 +26,7 @@ class TestRegistrationForm:
         register_btn.click()
         error = s_page.get_by_text("Email обов'язковий для заповнення")
         error.wait_for()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         expect(error).to_be_visible()
 
     @title("Registration underage user")
@@ -42,6 +43,7 @@ class TestRegistrationForm:
         pw_field.type(text=self.__class__.CURRENT_PW, delay=100)
         age_checkbox = s_page.locator("div.ui-checkbox.is-active.type-primary")
         age_checkbox.click()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         expect(s_page.locator("button[data-v-e18269df][data-v-225103f9]")).to_have_class(
             "is-disabled is-block is-primary-accent is-m-size is-center-justify ui-button")
 
@@ -64,6 +66,7 @@ class TestRegistrationForm:
         register_btn.click()
         error = s_page.get_by_text("НЕВІРНА АДРЕСА ЕЛЕКТРОННОЇ ПОШТИ")
         error.wait_for()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         expect(error).to_be_visible()
 
     @title("Registration with existing email")
@@ -84,6 +87,7 @@ class TestRegistrationForm:
         register_btn.click()
         error = s_page.get_by_text("ТАКИЙ КОРИСТУВАЧ ВЖЕ ІСНУЄ")
         error.wait_for()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         expect(error).to_be_visible()
 
     @title("Mask/Unmask password field")
@@ -97,6 +101,7 @@ class TestRegistrationForm:
         pw_field.wait_for()
         pw_field.type(self.__class__.CURRENT_PW, delay=100)
         s_page.locator("button.show-password-button").click()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         expect(s_page.locator("input[data-rr-is-password]")).to_have_attribute(name="type", value="text")
 
     @title("Registration with incorrect password format")
@@ -118,4 +123,5 @@ class TestRegistrationForm:
         register_btn.click()
         error = s_page.get_by_text("ЦЕЙ ПАРОЛЬ НЕ ПІДХОДИТЬ АБО ВІН МІСТИТЬ ПОМИЛКУ")
         error.wait_for()
+        attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         expect(error).to_be_visible()
