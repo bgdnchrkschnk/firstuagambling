@@ -1,16 +1,22 @@
 import time
 
 from playwright.sync_api import Page, expect
+
 from faker import Faker
-from exceptions.exceptions import EmailNotParsedError
 
 faker = Faker()
+from exceptions.exceptions import EmailNotParsedError
+from allure import title, description, suite, severity, severity_level
 
 
 class TestRegistrationFlow:
     CURRENT_EMAIL: str = None
     CURRENT_PW: str = None
 
+    @title("User registration by email")
+    @description("Verify user is able to register by email")
+    @severity(severity_level.CRITICAL)
+    @suite("e2e")
     def test_registration_by_email(self, s_page: Page):
         s_page.set_default_timeout(timeout=30000)
         s_page.goto(url="https://tempail.com/ua/")
@@ -40,6 +46,10 @@ class TestRegistrationFlow:
         avatar_section = s_page.wait_for_selector("div.wheel")
         assert avatar_section.is_visible(), "User transferring to private cabinet has failed"
 
+    @title("User sign out")
+    @description("Verify user is able to sign out from")
+    @severity(severity_level.CRITICAL)
+    @suite("e2e")
     def test_sign_out(self, s_page: Page):
         avatar_section = s_page.locator("div.wheel")
         avatar_section.click()
@@ -48,6 +58,10 @@ class TestRegistrationFlow:
         sign_in_btn = s_page.wait_for_selector("a[href='/ua/auth/login']")
         assert sign_in_btn.is_visible(), "Signing out is failed"
 
+    @title("User sign in")
+    @description("Verify user is able to sign in with existing account")
+    @severity(severity_level.CRITICAL)
+    @suite("e2e")
     def test_sign_in(self, s_page: Page):
         sign_in_btn = s_page.wait_for_selector("a[href='/ua/auth/login']")
         sign_in_btn.click()
@@ -62,6 +76,10 @@ class TestRegistrationFlow:
         avatar_section = s_page.wait_for_selector("div.wheel")
         assert avatar_section.is_visible(), f"Signing in system has failed"
 
+    @title("Email confirmation")
+    @description("Verify user is able to receive and confirm account with confirmation email")
+    @severity(severity_level.CRITICAL)
+    @suite("e2e")
     def test_email_confirm(self, s_page: Page):
         s_page.goto(url="https://first.ua/ua/profile/verification/mail", wait_until="domcontentloaded")
         send_mail_btn = s_page.locator("button[data-v-6d5837e6]")

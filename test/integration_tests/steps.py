@@ -1,12 +1,12 @@
 import requests
-from faker import Faker
 
-faker = Faker()
 
 
 class APIClientSteps:
 
     def __init__(self):
+        from faker import Faker
+        faker = Faker()
         self._client = requests.Session()
         self.email: str = faker.free_email()
         self.password: str = faker.password(length=6, upper_case=True, special_chars=True)

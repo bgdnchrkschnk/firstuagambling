@@ -1,5 +1,4 @@
 import pytest
-import requests
 from playwright.sync_api import Browser
 from test.integration_tests.steps import APIClientSteps
 

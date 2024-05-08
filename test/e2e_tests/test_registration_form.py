@@ -3,6 +3,8 @@ import time
 import pytest
 from playwright.sync_api import Page, expect
 from faker import Faker
+from allure import title, description, suite, severity, severity_level
+
 
 faker = Faker()
 
@@ -11,6 +13,10 @@ class TestRegistrationForm:
     CURRENT_EMAIL: str = None
     CURRENT_PW: str = None
 
+    @title("Registration with empty fields")
+    @description("Verify that system shows error message if user registers with empty fields")
+    @severity(severity_level.NORMAL)
+    @suite("Registration form testing")
     def test_empty_fields(self, s_page: Page):
         s_page.goto(url="https://first.ua/ua/auth/signup")
         time.sleep(1)
@@ -22,6 +28,10 @@ class TestRegistrationForm:
         error.wait_for()
         expect(error).to_be_visible()
 
+    @title("Registration underage user")
+    @description("Verify that system does not allow to register for underage user")
+    @severity(severity_level.NORMAL)
+    @suite("Registration form testing")
     def test_register_underage(self, s_page: Page):
         self.__class__.CURRENT_EMAIL = faker.free_email()
         self.__class__.CURRENT_PW = faker.password(length=8, digits=True, lower_case=True, upper_case=True,
@@ -35,6 +45,10 @@ class TestRegistrationForm:
         expect(s_page.locator("button[data-v-e18269df][data-v-225103f9]")).to_have_class(
             "is-disabled is-block is-primary-accent is-m-size is-center-justify ui-button")
 
+    @title("Registration with invalid email format")
+    @description("Verify that system does not allow to register with invalid email format")
+    @severity(severity_level.NORMAL)
+    @suite("Registration form testing")
     @pytest.mark.parametrize("email", ["hjbdhsjv.gmail.com","feubub@gmail","snefkj@@gmail.com"])
     def test_register_invalid_email_format(self, email, s_page: Page):
         s_page.goto(url="https://first.ua/ua/auth/signup")
@@ -52,6 +66,10 @@ class TestRegistrationForm:
         error.wait_for()
         expect(error).to_be_visible()
 
+    @title("Registration with existing email")
+    @description("Verify that system does not allow to register with existing email in system")
+    @severity(severity_level.CRITICAL)
+    @suite("Registration form testing")
     def test_register_existing_email(self, s_page: Page):
         s_page.goto(url="https://first.ua/ua/auth/signup")
         s_page.get_by_text(text="Е-пошта").click()
@@ -68,6 +86,10 @@ class TestRegistrationForm:
         error.wait_for()
         expect(error).to_be_visible()
 
+    @title("Mask/Unmask password field")
+    @description("Verify that mask/unmask pw field works correctly")
+    @severity(severity_level.NORMAL)
+    @suite("Registration form testing")
     def test_mask_password(self, s_page: Page):
         s_page.goto(url="https://first.ua/ua/auth/signup")
         s_page.get_by_text(text="Е-пошта").click()
@@ -77,6 +99,10 @@ class TestRegistrationForm:
         s_page.locator("button.show-password-button").click()
         expect(s_page.locator("input[data-rr-is-password]")).to_have_attribute(name="type", value="text")
 
+    @title("Registration with incorrect password format")
+    @description("Verify that system does not allow to register with incorrect password format")
+    @severity(severity_level.NORMAL)
+    @suite("Registration form testing")
     @pytest.mark.parametrize("password", ["1","fes","//*"])
     def test_register_invalid_password_format(self, password, s_page: Page):
         s_page.goto(url="https://first.ua/ua/auth/signup")

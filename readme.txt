@@ -1,4 +1,5 @@
-1. Create a separate venv
+Use python interpreter 3.11+
+1. Create and activate separate venv
 2. Install all needed dependencies using command 'pip install -Ur requirements.txt'
 
 To run e2e tests:
