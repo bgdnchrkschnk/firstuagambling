@@ -1,22 +1,16 @@
+from api_client.base_api_client import BaseAPIClient
 import requests
 from faker import Faker
 fake = Faker()
 
 
-class APIClientSteps:
+class APIClientEvents(BaseAPIClient):
 
-    def __init__(self):
-        self._client = requests.Session()
-        self.email: str = fake.free_email()
-        self.password: str = fake.password(length=6, upper_case=True, special_chars=True)
-
-    @property
-    def client(self):
-        return self._client
+    BASE_API_V2_URL = "https://apiv2.first.ua"
+    BASE_SOLITICS_URL = "https://api.solitics.com"
 
     def register(self) -> requests.Response:
-        url = "https://apiv2.first.ua/users/register"
-        self.client.headers.update({"Content-Type": "application/json; charset=utf-8"})
+        url = self.BASE_API_V2_URL + "/users/register"
         payload = {"type": "email",
                    "is_accept": True,
                    "email": self.email,
@@ -25,17 +19,17 @@ class APIClientSteps:
                    "phone_code": "380",
                    "subscriptionAgreement": True
                    }
-        response = self.client.post(url=url, json=payload)
+        response = self._post(url=url, json=payload)
         return response
 
     def get_profile_data(self, token: str) -> requests.Response:
-        url = "https://apiv2.first.ua/profile/info"
-        self.client.headers.update({'Authorization': "Bearer " + token})
-        response = self.client.get(url=url)
+        url = self.BASE_API_V2_URL + "/profile/info"
+        self._headers_update({'Authorization': "Bearer " + token})
+        response = self._get(url=url)
         return response
 
     def login_to_solitics(self, member_id: int) -> requests.Response:
-        url = "https://api.solitics.com/rest/integrations/login"
+        url = self.BASE_SOLITICS_URL + "/rest/integrations/login"
         payload = {
             "brand": "4eaa80b3-2609-47c0-9a4a-15e015bb9029",
             "memberId": member_id,
@@ -45,30 +39,30 @@ class APIClientSteps:
             "customFields": "{\"page\":\"first.ua/ua\",\"fullUrl\":\"https://first.ua/ua\"}",
             "branch": "firstua"
         }
-        response = self.client.post(url=url, json=payload)
+        response = self._post(url=url, json=payload)
         return response
 
     def get_dice_info(self) -> requests.Response:
-        url = "https://apiv2.first.ua/dices/info"
-        response = self.client.get(url=url)
+        url = self.BASE_API_V2_URL + "/dices/info"
+        response = self._get(url=url)
         return response
 
     def get_hotevents_list(self) -> requests.Response:
-        url = "https://apiv2.first.ua/hotevents/list"
-        response = self.client.get(url=url)
+        url = self.BASE_API_V2_URL + "/hotevents/list"
+        response = self._get(url=url)
         return response
 
     def get_loyalty_levels(self) -> requests.Response:
-        url = "https://apiv2.first.ua/loyalty/levels"
-        response = self.client.get(url=url)
+        url = self.BASE_API_V2_URL + "/loyalty/levels"
+        response = self._get(url=url)
         return response
 
     def get_transactions(self) -> requests.Response:
-        url = "https://api.solitics.com/rest/integrations/transaction"
-        response = self.client.post(url=url)
+        url = self.BASE_SOLITICS_URL + "/rest/integrations/transaction"
+        response = self._post(url=url)
         return response
 
     def get_user_promotions_profile_all(self) -> requests.Response:
-        url = "https://apiv2.first.ua/user_promotions/list/profile-all"
-        response = self.client.get(url=url)
+        url = self.BASE_API_V2_URL + "/user_promotions/list/profile-all"
+        response = self._get(url=url)
         return response

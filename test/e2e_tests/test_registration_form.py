@@ -10,6 +10,8 @@ faker = Faker()
 
 
 class TestRegistrationForm:
+    TEMPMAIL_URL: str = "https://tempail.com/ua/"
+    BASE_URL: str = "https://first.ua/"
     CURRENT_EMAIL: str = None
     CURRENT_PW: str = None
 
@@ -18,7 +20,7 @@ class TestRegistrationForm:
     @severity(severity_level.NORMAL)
     @suite("Registration form testing")
     def test_empty_fields(self, s_page: Page):
-        s_page.goto(url="https://first.ua/ua/auth/signup")
+        s_page.goto(url=self.BASE_URL + "ua/auth/signup")
         time.sleep(1)
         s_page.get_by_text(text="Е-пошта").click()
         register_btn = s_page.locator("button[data-v-e18269df][data-v-225103f9]")
@@ -53,7 +55,7 @@ class TestRegistrationForm:
     @suite("Registration form testing")
     @pytest.mark.parametrize("email", ["hjbdhsjv.gmail.com","feubub@gmail","snefkj@@gmail.com"])
     def test_register_invalid_email_format(self, email, s_page: Page):
-        s_page.goto(url="https://first.ua/ua/auth/signup")
+        s_page.goto(url=self.BASE_URL + "ua/auth/signup")
         s_page.get_by_text(text="Е-пошта").click()
         email_field = s_page.locator("input[type=email]")
         email_field.wait_for()
@@ -74,7 +76,7 @@ class TestRegistrationForm:
     @severity(severity_level.CRITICAL)
     @suite("Registration form testing")
     def test_register_existing_email(self, s_page: Page):
-        s_page.goto(url="https://first.ua/ua/auth/signup")
+        s_page.goto(url=self.BASE_URL + "ua/auth/signup")
         s_page.get_by_text(text="Е-пошта").click()
         email_field = s_page.locator("input[type=email]")
         email_field.wait_for()
@@ -95,7 +97,7 @@ class TestRegistrationForm:
     @severity(severity_level.NORMAL)
     @suite("Registration form testing")
     def test_mask_password(self, s_page: Page):
-        s_page.goto(url="https://first.ua/ua/auth/signup")
+        s_page.goto(url=self.BASE_URL + "ua/auth/signup")
         s_page.get_by_text(text="Е-пошта").click()
         pw_field = s_page.locator("input[type=password]")
         pw_field.wait_for()
@@ -110,7 +112,7 @@ class TestRegistrationForm:
     @suite("Registration form testing")
     @pytest.mark.parametrize("password", ["1","fes","//*"])
     def test_register_invalid_password_format(self, password, s_page: Page):
-        s_page.goto(url="https://first.ua/ua/auth/signup")
+        s_page.goto(url=self.BASE_URL + "ua/auth/signup")
         s_page.get_by_text(text="Е-пошта").click()
         email_field = s_page.locator("input[type=email]")
         email_field.wait_for()

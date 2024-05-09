@@ -1,6 +1,6 @@
 import pytest
 from playwright.sync_api import Browser
-from test.integration_tests.steps import APIClientSteps
+from api_client.api_client_events import APIClientEvents
 
 
 @pytest.fixture(scope='module')
@@ -12,6 +12,6 @@ def s_page(browser: Browser):
 
 @pytest.fixture(scope='session')
 def client():
-    client = APIClientSteps()
+    client = APIClientEvents()
     yield client
     del client

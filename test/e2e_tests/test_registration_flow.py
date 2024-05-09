@@ -9,6 +9,8 @@ faker = Faker()
 
 
 class TestRegistrationFlow:
+    TEMPMAIL_URL: str = "https://tempail.com/ua/"
+    BASE_URL: str = "https://first.ua/"
     CURRENT_EMAIL: str = None
     CURRENT_PW: str = None
 
@@ -18,12 +20,12 @@ class TestRegistrationFlow:
     @suite("e2e")
     def test_registration_by_email(self, s_page: Page):
         s_page.set_default_timeout(timeout=30000)
-        s_page.goto(url="https://tempail.com/ua/")
+        s_page.goto(url=self.TEMPMAIL_URL)
         self.__class__.CURRENT_EMAIL = s_page.get_attribute(selector="input#eposta_adres", name="data-clipboard-text")
         if not self.__class__.CURRENT_EMAIL:
             raise EmailNotParsedError
         self.__class__.CURRENT_PW = faker.password(length=8, digits=True, lower_case=True, upper_case=True, special_chars=True)
-        s_page.goto(url="https://first.ua/", wait_until="domcontentloaded")
+        s_page.goto(url=self.BASE_URL, wait_until="domcontentloaded")
         register_button = s_page.locator("a[href='/ua/auth/signup']")
         register_button.click()
         time.sleep(2)
@@ -82,13 +84,13 @@ class TestRegistrationFlow:
     @severity(severity_level.CRITICAL)
     @suite("e2e")
     def test_email_confirm(self, s_page: Page):
-        s_page.goto(url="https://first.ua/ua/profile/verification/mail", wait_until="domcontentloaded")
+        s_page.goto(url=self.BASE_URL + "profile/verification/mail", wait_until="domcontentloaded")
         send_mail_btn = s_page.locator("button[data-v-6d5837e6]")
         send_mail_btn.wait_for()
         time.sleep(2)
         send_mail_btn.click()
         expect(s_page.get_by_text("Будь ласка, перевірте вашу пошту та пройдіть верифікацію")).to_be_visible()
-        s_page.goto(url="https://tempail.com/ua/", wait_until="domcontentloaded")
+        s_page.goto(url=self.TEMPMAIL_URL, wait_until="domcontentloaded")
         email_to_open = s_page.wait_for_selector(selector="li.mail>a", timeout=30000)
         attach(s_page.screenshot(), name="Screenshot", attachment_type=attachment_type.JPG)
         assert email_to_open.is_visible(), "Confirmation email has not received"

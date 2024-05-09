@@ -1,7 +1,6 @@
-import faker as faker
 import pytest
 
-from test.integration_tests.steps import APIClientSteps
+from api_client.api_client_events import APIClientEvents
 from allure import title, suite, severity, severity_level
 
 
@@ -15,7 +14,7 @@ class TestsIntegration:
     @severity(severity_level.CRITICAL)
     @suite("Integration tests")
     @pytest.mark.integration
-    def test_registration(self, client: APIClientSteps):
+    def test_registration(self, client: APIClientEvents):
         response = client.register()
         assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
         assert "token" in response.json()['user'], f"Failed to register. token not asserted in {response.json()}"
@@ -24,7 +23,7 @@ class TestsIntegration:
     @title("Get profile info")
     @severity(severity_level.CRITICAL)
     @suite("Integration tests")
-    def test_get_profile_info(self, client: APIClientSteps):
+    def test_get_profile_info(self, client: APIClientEvents):
         response = client.get_profile_data(token=self.__class__.TOKEN)
         assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
         assert "user" in response.json(), f"Failed to get profile data. Json schema is wrong in {response.json()}"
@@ -35,14 +34,14 @@ class TestsIntegration:
     @severity(severity_level.CRITICAL)
     @suite("Integration tests")
     @pytest.mark.skip(reason="Needs to investigate with devs")
-    def test_login_solitics(self, client: APIClientSteps):
+    def test_login_solitics(self, client: APIClientEvents):
         response = client.login_to_solitics(token=self.__class__.TOKEN, member_id=self.__class__.MEMBER_ID)
         assert response.ok, response.json()
 
     @title("Get dice info")
     @severity(severity_level.CRITICAL)
     @suite("Integration tests")
-    def test_get_dice_info(self, client: APIClientSteps):
+    def test_get_dice_info(self, client: APIClientEvents):
         response = client.get_dice_info()
         assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
         assert "dices" in response.json()
@@ -50,7 +49,7 @@ class TestsIntegration:
     @title("Get hotevents list")
     @severity(severity_level.CRITICAL)
     @suite("Integration tests")
-    def test_hotevents_list(self, client: APIClientSteps):
+    def test_hotevents_list(self, client: APIClientEvents):
         response = client.get_hotevents_list()
         assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
         assert "events" in response.json()
@@ -58,7 +57,7 @@ class TestsIntegration:
     @title("Get user promotions profile")
     @severity(severity_level.CRITICAL)
     @suite("Integration tests")
-    def test_user_promotions_profile_all(self, client: APIClientSteps):
+    def test_user_promotions_profile_all(self, client: APIClientEvents):
         response = client.get_user_promotions_profile_all()
         assert response.ok, f"Status code is not as expected.\nExpected: 200\nActual: {response.status_code}"
         assert "available" in response.json()
